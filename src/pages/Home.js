@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API = '/api;
+const API = '/api';
 
 const Home = () => {
   const [sensors, setSensors] = useState([]);
