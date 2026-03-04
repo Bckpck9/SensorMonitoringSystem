@@ -2,32 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'api';
+const API = '/api;
 
 const Home = () => {
   const [sensors, setSensors] = useState([]);
 
   useEffect(() => {
-    async function loadSensors() {
+    const loadSensors = async () => {
       try {
-        const response = await axios.get(`${API}/sensors`);
-        setSensors(response.data);
+        const { data } = await axios.get(`${API}/sensors`);
+        setSensors(data);
       } catch (error) {
         console.error('Ошибка запроса:', error);
       }
-    }
+    };
 
     loadSensors();
   }, []);
 
-  async function deleteSensor(id) {
+  const deleteSensor = async (id) => {
     try {
       await axios.delete(`${API}/sensors/${id}`);
-      setSensors(prev => prev.filter(s => String(s.id) !== String(id)));
+      setSensors((prev) => prev.filter((s) => String(s.id) !== String(id)));
     } catch (error) {
       console.error('Ошибка удаления:', error);
     }
-  }
+  };
 
   return (
     <div>
@@ -43,15 +43,15 @@ const Home = () => {
         </thead>
 
         <tbody>
-          {sensors.map(sensor => (
+          {sensors.map((sensor) => (
             <tr key={sensor.id}>
               <td>{sensor.name || '(без названия)'}</td>
-
               <td>{sensor.alarm ? 'ТРЕВОГА' : 'норма'}</td>
-
               <td>
-                <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>{' '}
-                <button onClick={() => deleteSensor(sensor.id)}>Удалить</button>
+                <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>
+                <button type="button" onClick={() => deleteSensor(sensor.id)}>
+                  Удалить
+                </button>
               </td>
             </tr>
           ))}
