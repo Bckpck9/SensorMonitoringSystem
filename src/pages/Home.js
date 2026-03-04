@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API = '/api';
+const API = 'api';
 
 const Home = () => {
   const [sensors, setSensors] = useState([]);
@@ -16,6 +16,7 @@ const Home = () => {
         console.error('Ошибка запроса:', error);
       }
     }
+
     loadSensors();
   }, []);
 
@@ -32,31 +33,32 @@ const Home = () => {
     <div>
       <h1>Список датчиков</h1>
 
-      <div style={{ display: 'flex', fontWeight: 'bold', marginBottom: '10px' }}>
-        <div style={{ width: '220px' }}>Название</div>
-        <div style={{ width: '110px' }}>Статус</div>
-        <div>Действия</div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {sensors.map(sensor => (
-          <div key={sensor.id} style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '220px' }}>{sensor.name || '(без названия)'}</div>
-            <div style={{ width: '260px' }}>{sensor.place || '(без места)'}</div>
-            <div style={{ width: '90px' }}>{sensor.value ?? '-'}</div>
-            <div style={{ width: '110px' }}>
-              {sensor.alarm ? 'ТРЕВОГА' : 'норма'}
-            </div>
+        <tbody>
+          {sensors.map(sensor => (
+            <tr key={sensor.id}>
+              <td>{sensor.name || '(без названия)'}</td>
 
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>
-              <button onClick={() => deleteSensor(sensor.id)}>Удалить</button>
-            </div>
-          </div>
-        ))}
-      </div>
+              <td>{sensor.alarm ? 'ТРЕВОГА' : 'норма'}</td>
 
-      <div style={{ marginTop: '16px' }}>
+              <td>
+                <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>{' '}
+                <button onClick={() => deleteSensor(sensor.id)}>Удалить</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div>
         <Link to="/add">Добавить датчик</Link>
       </div>
     </div>
