@@ -16,6 +16,7 @@ const Home = () => {
         console.error('Ошибка запроса:', error);
       }
     };
+
     loadSensors();
   }, []);
 
@@ -30,15 +31,13 @@ const Home = () => {
 
   return (
     <div>
-      <b>Список датчиков</b>
-      <br />
-      <br />
+      <h1>Список датчиков</h1>
 
-      <table cellPadding="10" cellSpacing="0">
+      <table cellPadding="12" cellSpacing="0">
         <colgroup>
-          <col width="320" />
-          <col width="120" />
-          <col width="220" />
+          <col width="520" />
+          <col width="160" />
+          <col width="260" />
         </colgroup>
 
         <thead>
@@ -53,9 +52,7 @@ const Home = () => {
           {sensors.map((sensor) => (
             <tr key={sensor.id}>
               <td>{sensor.name || '(без названия)'}</td>
-
               <td>{sensor.alarm ? 'ТРЕВОГА' : 'норма'}</td>
-
               <td nowrap="nowrap">
                 <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>
                 &nbsp;&nbsp;&nbsp;
@@ -70,6 +67,8 @@ const Home = () => {
 
       <br />
       <Link to="/add">Добавить датчик</Link>
+      <br />
+      <Link to="/incidents">Все инциденты</Link>
     </div>
   );
 };
