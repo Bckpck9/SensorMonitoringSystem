@@ -6,20 +6,27 @@ const API = '/api';
 
 const IncidentsHome = () => {
   const [incidents, setIncidents] = useState([]);
+  const [error, setError] = useState('');
   const [searchParams] = useSearchParams();
   const sensorId = searchParams.get('sensorId');
 
   useEffect(() => {
     const loadIncidents = async () => {
+      setError('');
       try {
         const url = sensorId
           ? `${API}/incidents?sensorId=${encodeURIComponent(sensorId)}`
           : `${API}/incidents`;
 
         const { data } = await axios.get(url);
-        setIncidents(data);
-      } catch (error) {
-        console.error('Ошибка запроса инцидентов:', error);
+
+        // <-- защита: если вдруг пришло не array, не даём React упасть
+        const arr = Array.isArray(data) ? data : [];
+        setIncidents(arr);
+      } catch (e) {
+        console.error('Ошибка запроса инцидентов:', e);
+        setError('Не удалось загрузить инциденты');
+        setIncidents([]);
       }
     };
 
@@ -30,8 +37,9 @@ const IncidentsHome = () => {
     try {
       await axios.delete(`${API}/incidents/${id}`);
       setIncidents((prev) => prev.filter((x) => String(x.id) !== String(id)));
-    } catch (error) {
-      console.error('Ошибка удаления инцидента:', error);
+    } catch (e) {
+      console.error('Ошибка удаления инцидента:', e);
+      setError('Не удалось удалить инцидент');
     }
   };
 
@@ -39,15 +47,9 @@ const IncidentsHome = () => {
     <div>
       <h1>Инциденты{sensorId ? ` (датчик #${sensorId})` : ''}</h1>
 
-      <table cellPadding="12" cellSpacing="0">
-        <colgroup>
-          <col width="120" />
-          <col width="140" />
-          <col width="160" />
-          <col width="280" />
-          <col width="220" />
-        </colgroup>
+      {error && <div style={{ margin: '12px 0' }}>{error}</div>}
 
+      <table cellPadding="12" cellSpacing="0">
         <thead>
           <tr>
             <th align="left">ID</th>
@@ -65,7 +67,7 @@ const IncidentsHome = () => {
               <td>{inc.sensorId}</td>
               <td>{inc.type || '-'}</td>
               <td>{inc.createdAt || '-'}</td>
-              <td nowrap="nowrap">
+              <td style={{ whiteSpace: 'nowrap' }}>
                 <Link to={`/incidents/${inc.id}`}>Посмотреть</Link>
                 &nbsp;&nbsp;&nbsp;
                 <button type="button" onClick={() => deleteIncident(inc.id)}>
