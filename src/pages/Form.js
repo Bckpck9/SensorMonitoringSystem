@@ -53,46 +53,68 @@ const Form = ({ mode }) => {
   const alarmPreview = Number(value) >= THRESHOLD;
 
   return (
-    <div>
-      <h1>{isEdit ? 'Редактирование датчика' : 'Добавление датчика'}</h1>
+    <div className="page">
+      <div className="container">
+        <div className="form-card">
+          <h1 className="page-title">{isEdit ? 'Редактирование датчика' : 'Добавление датчика'}</h1>
 
-      <div>Статус (авто): <b>{alarmPreview ? 'ТРЕВОГА' : 'норма'}</b> (порог {THRESHOLD})</div>
-      <br />
+          <p className="helper-text">
+            Статус автоматически рассчитывается по значению датчика:{' '}
+            <span className={`badge ${alarmPreview ? 'badge-alarm' : 'badge-normal'}`}>
+              {alarmPreview ? 'Тревога' : 'Норма'}
+            </span>
+          </p>
 
-      <form onSubmit={handleSubmit}>
-        <table cellPadding="8" cellSpacing="0">
-          <colgroup>
-            <col width="160" />
-            <col width="520" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <td><b>Название</b></td>
-              <td><input value={name} onChange={(e) => setName(e.target.value)} required /></td>
-            </tr>
-            <tr>
-              <td><b>Место</b></td>
-              <td><input value={place} onChange={(e) => setPlace(e.target.value)} required /></td>
-            </tr>
-            <tr>
-              <td><b>Значение</b></td>
-              <td>
+          <form onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="name">Название</label>
                 <input
+                  id="name"
+                  className="input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="place">Место</label>
+                <input
+                  id="place"
+                  className="input"
+                  value={place}
+                  onChange={(e) => setPlace(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="value">Значение</label>
+                <input
+                  id="value"
+                  className="input"
                   type="number"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   required
                 />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
 
-        <br />
-        <button type="submit">Сохранить</button>
-        &nbsp;&nbsp;&nbsp;
-        <Link to="/">Назад</Link>
-      </form>
+            <div className="form-actions">
+
+              <Link className="btn-link" to="/">
+                Назад
+              </Link>
+              
+              <button className="btn" type="submit">
+                Сохранить
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
