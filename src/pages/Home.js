@@ -11,7 +11,7 @@ const Home = () => {
     const loadSensors = async () => {
       try {
         const { data } = await axios.get(`${API}/sensors`);
-        setSensors(data);
+        setSensors(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Ошибка запроса:', error);
       }
@@ -30,45 +30,72 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h1>Список датчиков</h1>
+    <div className="page">
+      <div className="container">
+        <div className="card">
+          <h1 className="page-title">Список датчиков</h1>
 
-      <table cellPadding="12" cellSpacing="0">
-        <colgroup>
-          <col width="520" />
-          <col width="160" />
-          <col width="260" />
-        </colgroup>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Место</th>
+                <th>Значение</th>
+                <th>Статус</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
 
-        <thead>
-          <tr>
-            <th align="left">Название</th>
-            <th align="left">Статус</th>
-            <th align="left">Действия</th>
-          </tr>
-        </thead>
+            <tbody>
+              {sensors.length > 0 ? (
+                sensors.map((sensor) => (
+                  <tr key={sensor.id}>
+                    <td>{sensor.name || '(без названия)'}</td>
+                    <td>{sensor.place || '-'}</td>
+                    <td>{sensor.value}</td>
+                    <td>
+                      <span className={`badge ${sensor.alarm ? 'badge-alarm' : 'badge-normal'}`}>
+                        {sensor.alarm ? 'Тревога' : 'Норма'}
+                      </span>
+                    </td>
+                    <td className="actions">
+                      <div className="actions-inline">
+                        <Link className="btn-link" to={`/detail/${sensor.id}`}>
+                          Посмотреть
+                        </Link>
 
-        <tbody>
-          {sensors.map((sensor) => (
-            <tr key={sensor.id}>
-              <td>{sensor.name || '(без названия)'}</td>
-              <td>{sensor.alarm ? 'ТРЕВОГА' : 'норма'}</td>
-              <td nowrap="nowrap">
-                <Link to={`/detail/${sensor.id}`}>Посмотреть</Link>
-                &nbsp;&nbsp;&nbsp;
-                <button type="button" onClick={() => deleteSensor(sensor.id)}>
-                  Удалить
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                        <button
+                          className="btn btn-danger"
+                          type="button"
+                          onClick={() => deleteSensor(sensor.id)}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="empty-text">
+                    Нет датчиков
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
-      <br />
-      <Link to="/add">Добавить датчик</Link>
-      <br />
-      <Link to="/incidents">Все инциденты</Link>
+          <div className="bottom-actions">
+            <Link className="btn-link" to="/add">
+              Добавить датчик
+            </Link>
+
+            <Link className="btn-link" to="/incidents">
+              Все инциденты
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
