@@ -22,32 +22,61 @@ const IncidentDetail = () => {
     loadIncident();
   }, [id]);
 
-  if (!incident) return <div>Загрузка...</div>;
+  if (!incident) {
+    return (
+      <div className="page">
+        <div className="container">
+          <div className="detail-card">
+            <h1 className="page-title">Инцидент</h1>
+            <p className="helper-text">Загрузка...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>Инцидент</h1>
+    <div className="page">
+      <div className="container">
+        <div className="detail-card">
+          <h1 className="page-title">Инцидент</h1>
 
-      <table cellPadding="8" cellSpacing="0">
-        <colgroup>
-          <col width="160" />
-          <col width="520" />
-        </colgroup>
-        <tbody>
-          <tr><td><b>ID</b></td><td>{incident.id}</td></tr>
-          <tr><td><b>Sensor ID</b></td><td>{incident.sensorId}</td></tr>
-          <tr><td><b>Тип</b></td><td>{incident.type}</td></tr>
-          <tr><td><b>Сообщение</b></td><td>{incident.message}</td></tr>
-          <tr><td><b>Время</b></td><td>{incident.createdAt}</td></tr>
-        </tbody>
-      </table>
+          <table className="info-table">
+            <tbody>
+              <tr>
+                <td>ID</td>
+                <td>{incident.id}</td>
+              </tr>
+              <tr>
+                <td>Sensor ID</td>
+                <td>{incident.sensorId}</td>
+              </tr>
+              <tr>
+                <td>Тип</td>
+                <td>{incident.type}</td>
+              </tr>
+              <tr>
+                <td>Сообщение</td>
+                <td>{incident.message}</td>
+              </tr>
+              <tr>
+                <td>Время</td>
+                <td>{incident.createdAt}</td>
+              </tr>
+            </tbody>
+          </table>
 
-      <br />
-      <button type="button" onClick={() => navigate(-1)}>Назад</button>
-      &nbsp;&nbsp;&nbsp;
-      <Link to={`/incidents/edit/${incident.id}`}>Изменить</Link>
-      <br />
-      <br />
+          <div className="bottom-actions">
+            <button className="btn" type="button" onClick={() => navigate(-1)}>
+              Назад
+            </button>
+
+            <Link className="btn-link" to={`/incidents/edit/${incident.id}`}>
+              Изменить
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
